@@ -12,6 +12,10 @@
 *.map
 *.exp
 
+# Local files
+programa
+.vscode
+
 # Precompiled Headers
 *.gch
 *.pch

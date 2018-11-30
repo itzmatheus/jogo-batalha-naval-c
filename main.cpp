@@ -7,6 +7,7 @@ Criador por Matheus Leite
 #include <string>
 #include <iostream>
 #include <stdbool.h>
+#include <time.h>
 
 using namespace std;
 
@@ -25,11 +26,16 @@ Metodos genericos do tabuleiro
 void iniciaTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void regras();
+void addBarcos(char tabuleiro[10][10]);
+
 
 
 
 int main(){
-  
+    
+    //Gera numeros aleatorios
+    srand((unsigned)time(NULL));
+
     menu_inicial();
 
     return 0;
@@ -75,7 +81,8 @@ void menu_inicial(){
 void regras(){
     printf(
         "* = Local desconhecido\n"
-        "A = Local com água\n"
+        "~ = Local com água\n"
+        "P = Barco pequeno\n"
         );
 }
 void jogo(){
@@ -83,17 +90,20 @@ void jogo(){
     printf("Bem vindo ao Jogo Batalha Naval!\n\n");
 
     //Criacao do tabuleiro
-    char tabuleiro[10][10], mascara[10][10]; //Tabuleiro e Mascara
+    //Tabuleiro (Mapa com os objetos implantados) e Mascara (Mapa com objetos desconhecidos)
+    char tabuleiro[10][10], mascara[10][10];
     int linha, coluna; //Variaveis de navegacao
     int linSELECIONADA, colSELECIONADA; //Posicoes escolhidas pelo usuario
     bool fimJogo = false; //Jogo finalizado false
-    
-    
+
     printf("     Tabuleiro\n\n");
 
     //Criando tabuleiro
     iniciaTabuleiro(tabuleiro, mascara);
 
+    //Adicionar elementos aleatorios no tabuleiro principal
+    //Implantar barcos
+    addBarcos(tabuleiro);
 
     while(fimJogo == false){
         LIMPA;
@@ -121,7 +131,7 @@ void iniciaTabuleiro(char tabuleiro[10][10],char mascara[10][10]){
 
         for(coluna = 0; coluna < 10; coluna++)
         {
-            tabuleiro[linha][coluna] = 'A';
+            tabuleiro[linha][coluna] = '~';
             mascara[linha][coluna] = '*';
 
         }
@@ -141,11 +151,50 @@ void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
 
         for(coluna = 0; coluna < 10; coluna++)
         {
+            printf(" %c",tabuleiro[linha][coluna]);
+            //printf(" %c",mascara[linha][coluna]);
+
+        }
+    printf(" %d\n",linha);
+    }
+
+
+        printf("\n\n 0 1 2 3 4 5 6 7 8 9 \n");
+
+    for(linha = 0; linha < 10; linha++)
+    {
+
+        for(coluna = 0; coluna < 10; coluna++)
+        {
             //printf(" %c",tabuleiro[linha][coluna]);
             printf(" %c",mascara[linha][coluna]);
 
         }
     printf(" %d\n",linha);
+    }
+
+
+}
+void addBarcos(char tabuleiro[10][10]){
+
+    //Numero de barcos
+    int qtd = 10, qtdPosicionada = 0;
+    int linhaALEATORIA, colunaALEATORIA;
+
+    //verifica se ja posicionou os barcos
+    while(qtdPosicionada < qtd){
+        //Gera numero aleatorio de 0 ate 9
+        linhaALEATORIA = rand() % 9;
+        colunaALEATORIA = rand() % 9;
+
+        //Verifica se na posicao aleatoria e agua
+        if(tabuleiro[linhaALEATORIA][colunaALEATORIA] == '~')
+        {
+            //Se for adiciona o barco
+            tabuleiro[linhaALEATORIA][colunaALEATORIA] = 'P';
+            //Adiciona tambem o numero de qtd posicionada (cont)
+            qtdPosicionada++;
+        }
     }
 
 

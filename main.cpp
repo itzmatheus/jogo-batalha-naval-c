@@ -9,10 +9,12 @@ Criador por Matheus Leite
 #include <stdbool.h>
 #include <time.h>
 
+//Atalhos usados no projeto
 using namespace std;
-
 //Metodo para limpar tela
 #define LIMPA system("clear");
+#define P "Barco Pequeno"
+
 
 /*
 Metodos que envolvem interacao com usuario
@@ -27,6 +29,7 @@ void iniciaTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void regras();
 void addBarcos(char tabuleiro[10][10]);
+void verificaTiro(char tabuleiro[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem);
 
 
 
@@ -42,7 +45,7 @@ int main(){
 }
 
 void menu_inicial(){
-
+    LIMPA;
     int opcao = 0;
     while(opcao < 1 || opcao > 3){
         cout << "Bem vindo ao jogo!\n";
@@ -56,7 +59,6 @@ void menu_inicial(){
 
         switch(opcao){
             case 1:
-                printf("Inicia o jogo\n");
                 jogo();
                 break;
             case 2:
@@ -87,14 +89,14 @@ void regras(){
 }
 void jogo(){
     LIMPA;
-    printf("Bem vindo ao Jogo Batalha Naval!\n\n");
-
     //Criacao do tabuleiro
     //Tabuleiro (Mapa com os objetos implantados) e Mascara (Mapa com objetos desconhecidos)
     char tabuleiro[10][10], mascara[10][10];
     int linha, coluna; //Variaveis de navegacao
     int linSELECIONADA, colSELECIONADA; //Posicoes escolhidas pelo usuario
     bool fimJogo = false; //Jogo finalizado false
+    int pontos = 0; //Variavei armazenara pontos
+    string mensagem = "Bem vindo ao Jogo Batalha Naval";
 
     printf("     Tabuleiro\n\n");
 
@@ -106,14 +108,21 @@ void jogo(){
     addBarcos(tabuleiro);
 
     while(fimJogo == false){
+
         LIMPA;
+
         //Exibindo tabuleiro
         exibeTabuleiro(tabuleiro, mascara);
 
-        printf("\nDigite uma linha: ");
+        printf("Pontos: %d\n",pontos);
+        cout << mensagem;
+        printf("\n\nDigite uma linha: ");
         scanf("%d",&linSELECIONADA);
         printf("Digite uma coluna: ");
         scanf("%d",&colSELECIONADA);
+
+        //Verifica o que o tiro revela para pontuar
+        verificaTiro(tabuleiro, linSELECIONADA, colSELECIONADA, &pontos, &mensagem);
 
         //Revela o que esta no tabuleiro
         mascara[linSELECIONADA][colSELECIONADA] = tabuleiro[linSELECIONADA][colSELECIONADA];
@@ -121,6 +130,24 @@ void jogo(){
     }
 
 }
+
+void verificaTiro(char tabuleiro[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem){
+    switch(tabuleiro[linSELECIONADA][colSELECIONADA]){
+        case 'P':
+            *pontos += 10;
+            *mensagem = "Você encontrou um Barco Pequeno [+ 10 pontos]";
+            break;
+        case '~':
+            *mensagem = "Você encontrou ÁGUA [0 pontos]";
+            *pontos += 0;
+            break;
+        default:
+            *mensagem = "Posição inexistente";
+            *pontos += 0;
+            break;
+    }
+}
+
 void iniciaTabuleiro(char tabuleiro[10][10],char mascara[10][10]){
 
     int linha, coluna; //Variaveis de navegacao
@@ -151,8 +178,7 @@ void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
 
         for(coluna = 0; coluna < 10; coluna++)
         {
-            printf(" %c",tabuleiro[linha][coluna]);
-            //printf(" %c",mascara[linha][coluna]);
+            printf(" %c",mascara[linha][coluna]);
 
         }
     printf(" %d\n",linha);
@@ -166,8 +192,7 @@ void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
 
         for(coluna = 0; coluna < 10; coluna++)
         {
-            //printf(" %c",tabuleiro[linha][coluna]);
-            printf(" %c",mascara[linha][coluna]);
+            printf(" %c",tabuleiro[linha][coluna]);
 
         }
     printf(" %d\n",linha);

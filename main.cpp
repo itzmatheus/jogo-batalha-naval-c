@@ -88,7 +88,7 @@ void regras(){
         );
 }
 void jogo(){
-    LIMPA;
+    LIMPA;   
     //Criacao do tabuleiro
     //Tabuleiro (Mapa com os objetos implantados) e Mascara (Mapa com objetos desconhecidos)
     char tabuleiro[10][10], mascara[10][10];
@@ -96,9 +96,8 @@ void jogo(){
     int linSELECIONADA, colSELECIONADA; //Posicoes escolhidas pelo usuario
     bool fimJogo = false; //Jogo finalizado false
     int pontos = 0; //Variavei armazenara pontos
-    string mensagem = "Bem vindo ao Jogo Batalha Naval";
-
-    printf("     Tabuleiro\n\n");
+    string mensagem = "\nBem vindo ao Jogo Batalha Naval\n";
+    int tentativasPlayer = 0, maxTentativasPlayer = 10; //Tentativas do jogarr
 
     //Criando tabuleiro
     iniciaTabuleiro(tabuleiro, mascara);
@@ -114,8 +113,15 @@ void jogo(){
         //Exibindo tabuleiro
         exibeTabuleiro(tabuleiro, mascara);
 
-        printf("Pontos: %d\n",pontos);
+        //Imprime mensagens de notificacao ao(s) play(ers)
         cout << mensagem;
+
+        printf(
+            "Tentativas: %d/%d"
+            " | "
+            "Pontos: %d\n",tentativasPlayer,maxTentativasPlayer,pontos);
+        
+        //Obtem os dados de linha e coluna para atirar na mascara
         printf("\n\nDigite uma linha: ");
         scanf("%d",&linSELECIONADA);
         printf("Digite uma coluna: ");
@@ -127,6 +133,20 @@ void jogo(){
         //Revela o que esta no tabuleiro
         mascara[linSELECIONADA][colSELECIONADA] = tabuleiro[linSELECIONADA][colSELECIONADA];
 
+        //Verifica o numero de tentativas e menor que o maximo definido
+        if (tentativasPlayer < maxTentativasPlayer){
+            fimJogo = false;
+            //Se for menor ele adiciona mais uma tentativa
+            tentativasPlayer++;
+        }else{
+            fimJogo = true;
+            mensagem = "\nLimite de tentativas atingido.\n";
+        }
+
+        //Mensagem final para o usuario apos terminar todas as tentativas
+        cout << mensagem;
+        printf("Você fez %d pontos!\n",pontos);
+
     }
 
 }
@@ -135,14 +155,14 @@ void verificaTiro(char tabuleiro[10][10], int linSELECIONADA, int colSELECIONADA
     switch(tabuleiro[linSELECIONADA][colSELECIONADA]){
         case 'P':
             *pontos += 10;
-            *mensagem = "Você encontrou um Barco Pequeno [+ 10 pontos]";
+            *mensagem = "\nVocê encontrou um Barco Pequeno [+ 10 pontos]\n";
             break;
         case '~':
-            *mensagem = "Você encontrou ÁGUA [0 pontos]";
+            *mensagem = "\nVocê encontrou ÁGUA [0 pontos]\n";
             *pontos += 0;
             break;
         default:
-            *mensagem = "Posição inexistente";
+            *mensagem = "\nPosição inexistente\n";
             *pontos += 0;
             break;
     }

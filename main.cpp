@@ -71,7 +71,7 @@ void menu_inicial(){
                 break;
             case 4:
                 printf("Obrigado por jogar! Até mais.\n");
-                break;
+                return;
             default:
                 LIMPA;
                 printf("Opção inválida. Tente novamente\n");
@@ -98,7 +98,7 @@ void jogo(){
     int pontos = 0; //Variavei armazenara pontos
     string mensagem = "\nBem vindo ao Jogo Batalha Naval\n";
     int tentativasPlayer = 0, maxTentativasPlayer = 10; //Tentativas do jogarr
-
+    int opcao; //Variavel para armazenar opcoes de fim de jogo do usuario
     //Criando tabuleiro
     iniciaTabuleiro(tabuleiro, mascara);
 
@@ -145,8 +145,29 @@ void jogo(){
 
         //Mensagem final para o usuario apos terminar todas as tentativas
         cout << mensagem;
-        printf("Você fez %d pontos!\n",pontos);
+        printf("Você fez %d pontos!\n\n",pontos);
+    }
 
+    printf("O que desejas :\n"
+    "1 => Jogar novamente\n"
+    "2 => Ir para o menu principal\n"
+    "3 => Sair\n"
+    
+    "Escolha: ");
+    
+    scanf("%d",&opcao);
+    switch(opcao){
+        case 1:
+            jogo();
+            break;
+        case 2:
+            menu_inicial();
+            break;
+        case 3:
+            printf("Obrigado por jogar. Volte depois :)");
+            return;
+        default:
+            printf("Opção inválida");
     }
 
 }

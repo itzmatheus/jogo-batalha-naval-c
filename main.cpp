@@ -126,11 +126,18 @@ void jogo(){
             " | "
             "Pontos: %d\n",tentativasPlayer,maxTentativasPlayer,pontos);
         
-        //Obtem os dados de linha e coluna para atirar na mascara
-        printf("\n\nDigite uma linha: ");
-        scanf("%d",&linSELECIONADA);
-        printf("Digite uma coluna: ");
-        scanf("%d",&colSELECIONADA);
+
+        //Verifica os dados inseridos
+        linSELECIONADA = -1, colSELECIONADA = -1;
+        while((linSELECIONADA < 0 || colSELECIONADA < 0) || (linSELECIONADA > 9 || colSELECIONADA > 9)){
+        
+            //Obtem os dados de linha e coluna para atirar na mascara
+            printf("\n\nDigite uma linha: ");
+            scanf("%d",&linSELECIONADA);
+            printf("Digite uma coluna: ");
+            scanf("%d",&colSELECIONADA);
+        
+        }
 
         //Verifica o que o tiro revela para pontuar
         verificaTiro(tabuleiro, linSELECIONADA, colSELECIONADA, &pontos, &mensagem);

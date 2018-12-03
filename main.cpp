@@ -47,6 +47,7 @@ int main(){
 void menu_inicial(){
     LIMPA;
     int opcao = 0;
+
     while(opcao < 1 || opcao > 3){
         cout << "Bem vindo ao jogo!\n";
         cout << "1 => Jogar\n"
@@ -96,15 +97,20 @@ void jogo(){
     int linSELECIONADA, colSELECIONADA; //Posicoes escolhidas pelo usuario
     bool fimJogo = false; //Jogo finalizado false
     int pontos = 0; //Variavei armazenara pontos
-    string mensagem = "\nBem vindo ao Jogo Batalha Naval\n";
+    string mensagem = "Bem vindo ao Jogo Batalha Naval\n";
     int tentativasPlayer = 0, maxTentativasPlayer = 10; //Tentativas do jogarr
     int opcao; //Variavel para armazenar opcoes de fim de jogo do usuario
+    string NomeJogador; //String que ira armazenar o nome do jogador
+
     //Criando tabuleiro
     iniciaTabuleiro(tabuleiro, mascara);
 
     //Adicionar elementos aleatorios no tabuleiro principal
     //Implantar barcos
     addBarcos(tabuleiro);
+
+    printf("Qual nome do jogador Nº 1 ?\n");
+    cin >> NomeJogador;
 
     while(fimJogo == false){
 
@@ -114,8 +120,7 @@ void jogo(){
         exibeTabuleiro(tabuleiro, mascara);
 
         //Imprime mensagens de notificacao ao(s) play(ers)
-        cout << mensagem;
-
+        cout << "\n" << NomeJogador << ", " << mensagem;
         printf(
             "Tentativas: %d/%d"
             " | "
@@ -212,31 +217,48 @@ void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
 
     int linha, coluna;
 
-    printf(" 0 1 2 3 4 5 6 7 8 9 \n");
+    //Imprime o tabuleiro de colunas
+    for(int i = 0; i < 10; i++)
+    {
+        printf(" %d",i);
+    }
+    
+    printf("\n");
 
     for(linha = 0; linha < 10; linha++)
     {
+
+        //Imprime o tabuleiro de linhas
+        printf("%d",linha);
 
         for(coluna = 0; coluna < 10; coluna++)
         {
             printf(" %c",mascara[linha][coluna]);
 
         }
-    printf(" %d\n",linha);
+    printf("\n");
     }
 
+    //Imprime o tabuleiro de colunas
+    for(int i = 0; i < 10; i++)
+    {
+        printf(" %d",i);
+    }
 
-        printf("\n\n 0 1 2 3 4 5 6 7 8 9 \n");
+    printf("\n");
 
     for(linha = 0; linha < 10; linha++)
     {
+        
+        //Imprime o tabuleiro de linhas
+        printf("%d",linha);
 
         for(coluna = 0; coluna < 10; coluna++)
         {
             printf(" %c",tabuleiro[linha][coluna]);
 
         }
-    printf(" %d\n",linha);
+    printf("\n");
     }
 
 

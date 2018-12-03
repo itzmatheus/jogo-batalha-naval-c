@@ -29,7 +29,7 @@ void iniciaTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
 void regras();
 void addBarcos(char tabuleiro[10][10]);
-void verificaTiro(char tabuleiro[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem);
+void verificaTiro(char tabuleiro[10][10], char mascara[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem);
 
 
 
@@ -140,7 +140,7 @@ void jogo(){
         }
 
         //Verifica o que o tiro revela para pontuar
-        verificaTiro(tabuleiro, linSELECIONADA, colSELECIONADA, &pontos, &mensagem);
+        verificaTiro(tabuleiro,mascara, linSELECIONADA, colSELECIONADA, &pontos, &mensagem);
 
         //Revela o que esta no tabuleiro
         mascara[linSELECIONADA][colSELECIONADA] = tabuleiro[linSELECIONADA][colSELECIONADA];
@@ -184,21 +184,32 @@ void jogo(){
 
 }
 
-void verificaTiro(char tabuleiro[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem){
-    switch(tabuleiro[linSELECIONADA][colSELECIONADA]){
-        case 'P':
-            *pontos += 10;
-            *mensagem = "\nVocê encontrou um Barco Pequeno [+ 10 pontos]\n";
-            break;
-        case '~':
-            *mensagem = "\nVocê encontrou ÁGUA [0 pontos]\n";
-            *pontos += 0;
-            break;
-        default:
-            *mensagem = "\nPosição inexistente\n";
-            *pontos += 0;
-            break;
+void verificaTiro(char tabuleiro[10][10],char mascara[10][10],int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem){
+    
+    //Verifica se a posicao ja foi encontrada
+    
+    if (mascara[linSELECIONADA][colSELECIONADA] == '*') {
+        
+        //Verifica se encontrou algo no tiro
+        switch(tabuleiro[linSELECIONADA][colSELECIONADA]){
+            case 'P':
+                *pontos += 10;
+                *mensagem = "\nVocê encontrou um Barco Pequeno [+ 10 pontos]\n";
+                break;
+            case '~':
+                *mensagem = "\nVocê encontrou ÁGUA [0 pontos]\n";
+                *pontos += 0;
+                break;
+            default:
+                *mensagem = "\nPosição inexistente\n";
+                *pontos += 0;
+                break;
+        }
+    }else{
+        *mensagem = "\nPosicao já encontrada [0 pontos]\n";
+        *pontos += 0;
     }
+    
 }
 
 void iniciaTabuleiro(char tabuleiro[10][10],char mascara[10][10]){

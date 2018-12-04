@@ -32,7 +32,7 @@ void exibeTabuleiro(char tabuleiro[15][15], char mascara[15][15]);
 void regras();
 void addBarcos(char tabuleiro[15][15]);
 void verificaTiro(char tabuleiro[15][15], char mascara[15][15], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem, int *tentativasPlayer);
-
+void AddRanking(string nome, int pontos, int tentativasPlayer);
 
 
 
@@ -113,7 +113,7 @@ void jogo(){
     bool fimJogo = false; //Jogo finalizado false
     int pontos = 0; //Variavei armazenara pontos
     string mensagem = "Bem vindo ao Jogo Batalha Naval\n";
-    int tentativasPlayer = 0, maxTentativasPlayer = 10; //Tentativas do jogarr
+    int tentativasPlayer = 0, maxTentativasPlayer = 5; //Tentativas do jogarr
     int opcao; //Variavel para armazenar opcoes de fim de jogo do usuario
     string NomeJogador; //String que ira armazenar o nome do jogador
 
@@ -174,6 +174,8 @@ void jogo(){
         cout << mensagem;
         printf("Você fez %d pontos!\n\n",pontos);
     }
+    //Add ranking
+    AddRanking(NomeJogador, pontos, tentativasPlayer); 
 
     printf("O que desejas :\n"
     "1 => Jogar novamente\n"
@@ -200,34 +202,37 @@ void jogo(){
 }
 
 void ranking(){
-    //Carrega a lista encadeada simples de jogadores a partir do arquivo:
-    JOGADOR * lista = carregaRanking();
-    //Imprime a lista encadeada simples carregada:
-    printf("Lista carregada: \n");
-    imprimeLista(lista);
-    printf("Alterando as vitorias de Tainha: \n");
-    char nome[7] = "TAINHA";
-    //Altera as vitorias pelo nome do jogador:
-    alteraVitoriasNomeJogador(lista, nome, 50);
-    printf("Lista alterada: \n");
-    imprimeLista(lista);
-    printf("Salvando a nova lista em arquivo \n");
-    salvaRanking(lista);
-    printf("Carregando nova lista atualizada do disco \n");
-    lista = carregaRanking();
-    printf("Nova lista carregada: \n");
-    imprimeLista(lista);
-    //Altera as vitorias pelo numero do jogador:
-    printf("Alterando as vitorias do jogador 1: \n");
-    alteraVitoriasNumeroJogador(lista, 1, 50);
-    printf("Lista alterada: \n");
-    imprimeLista(lista);
-    printf("Salvando a nova lista em arquivo \n");
-    salvaRanking(lista);
-    printf("Nova lista carregada: \n");
-    imprimeLista(lista);
-}
+    
+    LIMPA;
 
+    printf("\t\t\t\t\t\t    ____              __   _            \n");
+    printf("\t\t\t\t\t\t   / __ \\____ _____  / /__(_)___  ____ _\n");
+    printf("\t\t\t\t\t\t  / /_/ / __ `/ __ \\/ //_/ / __ \\/ __ `/\n");
+    printf("\t\t\t\t\t\t / _, _/ /_/ / / / / ,< / / / / / /_/ /\n");
+    printf("\t\t\t\t\t\t/_/ |_|\\__,_/_/ /_/_/|_/_/_/ /_/\\__, /\n");
+    printf("\t\t\t\t\t\t                               /____/\n\n");
+ 
+    printf("\t\t\t\t\t          --------------------------------\n");
+ 
+     //Carrega a lista encadeada simples de jogadores a partir do arquivo:
+     JOGADOR * lista = carregaRanking();
+     imprimeLista(lista);
+     liberaMemoria(lista);
+
+}
+void AddRanking(string nome, int pontos, int tentativasPlayer){
+
+    FILE * arquivo = fopen("ranking.txt", "a+");
+	if(!arquivo) return;
+
+    JOGADOR player;
+    
+    fprintf(arquivo, "%s,%d,%d\n",nome.c_str(), pontos, tentativasPlayer);
+    
+
+    fclose(arquivo);
+
+}
 void verificaTiro(char tabuleiro[15][15],char mascara[15][15],int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem, int *tentativasPlayer){
     
     //Verifica se a posicao ja foi encontrada

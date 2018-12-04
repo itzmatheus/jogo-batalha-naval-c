@@ -8,6 +8,7 @@ Criador por Matheus Leite
 #include <iostream>
 #include <stdbool.h>
 #include <time.h>
+#include "ranking.c"
 
 //Atalhos usados no projeto
 using namespace std;
@@ -25,11 +26,12 @@ void jogo();
 /*
 Metodos genericos do tabuleiro
 */
-void iniciaTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
-void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]);
+void ranking();
+void iniciaTabuleiro(char tabuleiro[15][15], char mascara[15][15]);
+void exibeTabuleiro(char tabuleiro[15][15], char mascara[15][15]);
 void regras();
-void addBarcos(char tabuleiro[10][10]);
-void verificaTiro(char tabuleiro[10][10], char mascara[10][10], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem);
+void addBarcos(char tabuleiro[15][15]);
+void verificaTiro(char tabuleiro[15][15], char mascara[15][15], int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem, int *tentativasPlayer);
 
 
 
@@ -49,12 +51,25 @@ void menu_inicial(){
     int opcao = 0;
 
     while(opcao < 1 || opcao > 3){
-        cout << "Bem vindo ao jogo!\n";
-        cout << "1 => Jogar\n"
-                "2 => Regras\n"
-                "3 => Sobre\n"
-                "4 => Sair\n"
-                "Escolha uma opção e tecle ENTER: ";
+         printf("\t\t\t\t         ____        __        ____             _   __                  __\n");
+    printf("\t\t\t\t        / __ )____ _/ /_____ _/ / /_  ____ _   / | / /___ __   ______ _/ /\n");
+    printf("\t\t\t\t       / __  / __ `/ __/ __ `/ / __ \\/ __ `/  /  |/ / __ `/ | / / __ `/ / \n");
+    printf("\t\t\t\t      / /_/ / /_/ / /_/ /_/ / / / / / /_/ /  / /|  / /_/ /| |/ / /_/ / /  \n");
+    printf("\t\t\t\t     /_____/\\__,_/\\__/\\__,_/_/_/ /_/\\__,_/  /_/ |_/\\__,_/ |___/\\__,_/_/   \n");
+        
+        
+                printf("\n\n");
+        printf("\t\t\t\t\t\t       --------------------------------\n");
+        printf("\t\t\t\t\t\t       |        MENU PRINCIPAL        |\n");
+        printf("\t\t\t\t\t\t       --------------------------------\n");
+        printf("\t\t\t\t\t\t       |  1. NOVO JOGO                |\n");
+        printf("\t\t\t\t\t\t       |  2. INSTRUÇÕES DO JOGO       |\n");
+        printf("\t\t\t\t\t\t       |  3. RANKING                  |\n");
+        printf("\t\t\t\t\t\t       |  4. SAIR                     |\n");
+        printf("\t\t\t\t\t\t       --------------------------------\n\n\n");
+        
+        
+        printf("Escolha uma opção e tecle ENTER: ");
 
         cin >> opcao;
 
@@ -68,7 +83,7 @@ void menu_inicial(){
                 regras();
                 break;
             case 3:
-                printf("Quem criou foi matheus\n");
+                ranking();
                 break;
             case 4:
                 printf("Obrigado por jogar! Até mais.\n");
@@ -92,7 +107,7 @@ void jogo(){
     LIMPA;   
     //Criacao do tabuleiro
     //Tabuleiro (Mapa com os objetos implantados) e Mascara (Mapa com objetos desconhecidos)
-    char tabuleiro[10][10], mascara[10][10];
+    char tabuleiro[15][15], mascara[15][15];
     int linha, coluna; //Variaveis de navegacao
     int linSELECIONADA, colSELECIONADA; //Posicoes escolhidas pelo usuario
     bool fimJogo = false; //Jogo finalizado false
@@ -129,7 +144,7 @@ void jogo(){
 
         //Verifica os dados inseridos
         linSELECIONADA = -1, colSELECIONADA = -1;
-        while((linSELECIONADA < 0 || colSELECIONADA < 0) || (linSELECIONADA > 9 || colSELECIONADA > 9)){
+        while((linSELECIONADA < 0 || colSELECIONADA < 0) || (linSELECIONADA > 14 || colSELECIONADA > 14)){
         
             //Obtem os dados de linha e coluna para atirar na mascara
             printf("\n\nDigite uma linha: ");
@@ -140,7 +155,7 @@ void jogo(){
         }
 
         //Verifica o que o tiro revela para pontuar
-        verificaTiro(tabuleiro,mascara, linSELECIONADA, colSELECIONADA, &pontos, &mensagem);
+        verificaTiro(tabuleiro,mascara, linSELECIONADA, colSELECIONADA, &pontos, &mensagem, &tentativasPlayer);
 
         //Revela o que esta no tabuleiro
         mascara[linSELECIONADA][colSELECIONADA] = tabuleiro[linSELECIONADA][colSELECIONADA];
@@ -184,7 +199,36 @@ void jogo(){
 
 }
 
-void verificaTiro(char tabuleiro[10][10],char mascara[10][10],int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem){
+void ranking(){
+    //Carrega a lista encadeada simples de jogadores a partir do arquivo:
+    JOGADOR * lista = carregaRanking();
+    //Imprime a lista encadeada simples carregada:
+    printf("Lista carregada: \n");
+    imprimeLista(lista);
+    printf("Alterando as vitorias de Tainha: \n");
+    char nome[7] = "TAINHA";
+    //Altera as vitorias pelo nome do jogador:
+    alteraVitoriasNomeJogador(lista, nome, 50);
+    printf("Lista alterada: \n");
+    imprimeLista(lista);
+    printf("Salvando a nova lista em arquivo \n");
+    salvaRanking(lista);
+    printf("Carregando nova lista atualizada do disco \n");
+    lista = carregaRanking();
+    printf("Nova lista carregada: \n");
+    imprimeLista(lista);
+    //Altera as vitorias pelo numero do jogador:
+    printf("Alterando as vitorias do jogador 1: \n");
+    alteraVitoriasNumeroJogador(lista, 1, 50);
+    printf("Lista alterada: \n");
+    imprimeLista(lista);
+    printf("Salvando a nova lista em arquivo \n");
+    salvaRanking(lista);
+    printf("Nova lista carregada: \n");
+    imprimeLista(lista);
+}
+
+void verificaTiro(char tabuleiro[15][15],char mascara[15][15],int linSELECIONADA, int colSELECIONADA, int *pontos, string *mensagem, int *tentativasPlayer){
     
     //Verifica se a posicao ja foi encontrada
     
@@ -197,8 +241,12 @@ void verificaTiro(char tabuleiro[10][10],char mascara[10][10],int linSELECIONADA
                 *mensagem = "\nVocê encontrou um Barco Pequeno [+ 10 pontos]\n";
                 break;
             case '~':
-                *mensagem = "\nVocê encontrou ÁGUA [0 pontos]\n";
+                *mensagem = "\nVocê encontrou ÁGUA [+0 pontos]\n";
                 *pontos += 0;
+                break;
+            case 'M':
+                *pontos += 20;
+                *mensagem = "\n Você encontrou um Barco Médio [+ 20 pontos]\n";
                 break;
             default:
                 *mensagem = "\nPosição inexistente\n";
@@ -206,21 +254,22 @@ void verificaTiro(char tabuleiro[10][10],char mascara[10][10],int linSELECIONADA
                 break;
         }
     }else{
-        *mensagem = "\nPosicao já encontrada [0 pontos]\n";
+        *mensagem = "\nPosicao já encontrada. Tente outra!!!\n";
         *pontos += 0;
+        *tentativasPlayer -= 1;
     }
     
 }
 
-void iniciaTabuleiro(char tabuleiro[10][10],char mascara[10][10]){
+void iniciaTabuleiro(char tabuleiro[15][15],char mascara[15][15]){
 
     int linha, coluna; //Variaveis de navegacao
 
     //Construir tabuleiro
-    for(linha = 0; linha < 10; linha++)
+    for(linha = 0; linha < 15; linha++)
     {
 
-        for(coluna = 0; coluna < 10; coluna++)
+        for(coluna = 0; coluna < 15; coluna++)
         {
             tabuleiro[linha][coluna] = '~';
             mascara[linha][coluna] = '*';
@@ -231,49 +280,51 @@ void iniciaTabuleiro(char tabuleiro[10][10],char mascara[10][10]){
 
 
 }
-void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
+void exibeTabuleiro(char tabuleiro[15][15], char mascara[15][15]){
 
     int linha, coluna;
 
     //Imprime o tabuleiro de colunas
-    for(int i = 0; i < 10; i++)
-    {
-        printf(" %d",i);
-    }
-    
+    printf("   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14");
+
     printf("\n");
 
-    for(linha = 0; linha < 10; linha++)
+    for(linha = 0; linha < 15; linha++)
     {
 
         //Imprime o tabuleiro de linhas
-        printf("%d",linha);
+        if(linha < 10){
+            printf("%d ",linha);
 
-        for(coluna = 0; coluna < 10; coluna++)
+        }else{
+            printf("%d",linha);
+        }
+        for(coluna = 0; coluna < 15; coluna++)
         {
-            printf(" %c",mascara[linha][coluna]);
+            printf(" %c ",mascara[linha][coluna]);
 
         }
     printf("\n");
     }
 
     //Imprime o tabuleiro de colunas
-    for(int i = 0; i < 10; i++)
-    {
-        printf(" %d",i);
-    }
+    printf("\n   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14");
 
     printf("\n");
 
-    for(linha = 0; linha < 10; linha++)
+    for(linha = 0; linha < 15; linha++)
     {
         
         //Imprime o tabuleiro de linhas
-        printf("%d",linha);
+        if(linha < 10){
+            printf("%d ",linha);
 
-        for(coluna = 0; coluna < 10; coluna++)
+        }else{
+            printf("%d",linha);
+        }
+        for(coluna = 0; coluna < 15; coluna++)
         {
-            printf(" %c",tabuleiro[linha][coluna]);
+            printf(" %c ",tabuleiro[linha][coluna]);
 
         }
     printf("\n");
@@ -281,27 +332,47 @@ void exibeTabuleiro(char tabuleiro[10][10], char mascara[10][10]){
 
 
 }
-void addBarcos(char tabuleiro[10][10]){
+void addBarcos(char tabuleiro[15][15]){
 
     //Numero de barcos
-    int qtd = 10, qtdPosicionada = 0;
+    int qtdPequeno = 10, qtdMedio = 5, qtdPosicionada = 0;//Qtd de barcos
     int linhaALEATORIA, colunaALEATORIA;
 
+    //add barcos pequenos "P"
     //verifica se ja posicionou os barcos
-    while(qtdPosicionada < qtd){
-        //Gera numero aleatorio de 0 ate 9
-        linhaALEATORIA = rand() % 9;
-        colunaALEATORIA = rand() % 9;
+    while(qtdPosicionada < qtdPequeno){
+        //Gera numero aleatorio de 0 ate 14
+        linhaALEATORIA = rand() % 14;
+        colunaALEATORIA = rand() % 14;
 
         //Verifica se na posicao aleatoria e agua
         if(tabuleiro[linhaALEATORIA][colunaALEATORIA] == '~')
         {
             //Se for adiciona o barco
             tabuleiro[linhaALEATORIA][colunaALEATORIA] = 'P';
-            //Adiciona tambem o numero de qtd posicionada (cont)
+            //Adiciona tambem o numero de qtdPequeno posicionada (cont)
             qtdPosicionada++;
         }
     }
+
+    qtdPosicionada = 0;
+    //add barcos Medios "M"
+    //verifica se ja posicionou os barcos
+    while(qtdPosicionada < qtdMedio){
+        //Gera numero aleatorio de 0 ate 14
+        linhaALEATORIA = rand() % 14;
+        colunaALEATORIA = rand() % 14;
+
+        //Verifica se na posicao aleatoria e agua
+        if(tabuleiro[linhaALEATORIA][colunaALEATORIA] == '~')
+        {
+            //Se for adiciona o barco
+            tabuleiro[linhaALEATORIA][colunaALEATORIA] = 'M';
+            //Adiciona tambem o numero de qtdPequeno posicionada (cont)
+            qtdPosicionada++;
+        }
+    }
+
 
 
 }

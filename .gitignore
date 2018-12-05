@@ -15,7 +15,7 @@
 # Local files
 programa
 .vscode
-
+ranking.txt
 # Precompiled Headers
 *.gch
 *.pch

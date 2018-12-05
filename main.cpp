@@ -35,7 +35,6 @@ void verificaTiro(char tabuleiro[15][15], char mascara[15][15], int linSELECIONA
 void AddRanking(string nome, int pontos, int tentativasPlayer);
 
 
-
 int main(){
     
     //Gera numeros aleatorios
@@ -79,7 +78,6 @@ void menu_inicial(){
                 break;
             case 2:
                 LIMPA;
-                printf("Informações do tabuleiro:\n");
                 regras();
                 break;
             case 3:
@@ -97,10 +95,28 @@ void menu_inicial(){
 
 }
 void regras(){
+
+
+         printf("\t\t\t\t         ____        __        ____             _   __                  __\n");
+    printf("\t\t\t\t        / __ )____ _/ /_____ _/ / /_  ____ _   / | / /___ __   ______ _/ /\n");
+    printf("\t\t\t\t       / __  / __ `/ __/ __ `/ / __ \\/ __ `/  /  |/ / __ `/ | / / __ `/ / \n");
+    printf("\t\t\t\t      / /_/ / /_/ / /_/ /_/ / / / / / /_/ /  / /|  / /_/ /| |/ / /_/ / /  \n");
+    printf("\t\t\t\t     /_____/\\__,_/\\__/\\__,_/_/_/ /_/\\__,_/  /_/ |_/\\__,_/ |___/\\__,_/_/   \n\n\n");
+        
+
+
     printf(
-        "* = Local desconhecido\n"
-        "~ = Local com água\n"
-        "P = Barco pequeno\n"
+        "\t\t\t\t\t\t\t\t Informações do Jogo\n\n"
+        "\t\t\t\t 1 - Todos os barcos estão SOMENTE numa posição;\n"
+        "\t\t\t\t 2 - Existem 3 tipos de barcos:\n\n"
+        "\t\t\t\t\t 'P' x10 - Barco Pequeno. Caso encontre será concebido +10 pontos\n"
+        "\t\t\t\t\t 'M' x5 - Barco Médio. Caso encontre será concebido +20 pontos\n"
+        "\t\t\t\t\t 'G' x2 - Barco Grande. Caso encontre será concebido +50 pontos\n"
+        "\t\t\t\t 3 - Elementos do campo:\n\n"
+        "\t\t\t\t\t '*' - Elemento desconhecido\n"
+        "\t\t\t\t\t '~' - Elemento água \n"
+
+
         );
 }
 void jogo(){
@@ -174,7 +190,7 @@ void jogo(){
         cout << mensagem;
         printf("Você fez %d pontos!\n\n",pontos);
     }
-    //Add ranking
+    //Add usuario atual no ranking com sua pontuacao
     AddRanking(NomeJogador, pontos, tentativasPlayer); 
 
     printf("O que desejas :\n"
@@ -218,8 +234,8 @@ void ranking(){
      JOGADOR * lista = carregaRanking();
      imprimeLista(lista);
      liberaMemoria(lista);
-
 }
+
 void AddRanking(string nome, int pontos, int tentativasPlayer){
 
     FILE * arquivo = fopen("ranking.txt", "a+");
@@ -252,6 +268,10 @@ void verificaTiro(char tabuleiro[15][15],char mascara[15][15],int linSELECIONADA
             case 'M':
                 *pontos += 20;
                 *mensagem = "\n Você encontrou um Barco Médio [+ 20 pontos]\n";
+                break;
+            case 'G':
+                *pontos += 50;
+                *mensagem = "\n Você encontrou um barco Grande [+50 pontos]\n";
                 break;
             default:
                 *mensagem = "\nPosição inexistente\n";
@@ -290,10 +310,7 @@ void exibeTabuleiro(char tabuleiro[15][15], char mascara[15][15]){
     int linha, coluna;
 
     //Imprime o tabuleiro de colunas
-    printf("   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14");
-
-    printf("\n");
-
+    printf("   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14\n");
     for(linha = 0; linha < 15; linha++)
     {
 
@@ -340,7 +357,7 @@ void exibeTabuleiro(char tabuleiro[15][15], char mascara[15][15]){
 void addBarcos(char tabuleiro[15][15]){
 
     //Numero de barcos
-    int qtdPequeno = 10, qtdMedio = 5, qtdPosicionada = 0;//Qtd de barcos
+    int qtdPequeno = 10, qtdMedio = 5, qtdGrande = 2, qtdPosicionada = 0;//Qtd de barcos
     int linhaALEATORIA, colunaALEATORIA;
 
     //add barcos pequenos "P"
@@ -377,7 +394,21 @@ void addBarcos(char tabuleiro[15][15]){
             qtdPosicionada++;
         }
     }
+    qtdPosicionada = 0;
+    while(qtdPosicionada < qtdGrande){
+        //Gera numero aleatorio de 0 ate 14
+        linhaALEATORIA = rand() % 14;
+        colunaALEATORIA = rand() % 14;
 
+        //Verifica se na posicao aleatoria e agua
+        if(tabuleiro[linhaALEATORIA][colunaALEATORIA] == '~')
+        {
+            //Se for adiciona o barco
+            tabuleiro[linhaALEATORIA][colunaALEATORIA] = 'G';
+            //Adiciona tambem o numero de qtdPequeno posicionada (cont)
+            qtdPosicionada++;
+        }
+    }
 
 
 }

@@ -118,6 +118,27 @@ void regras(){
 
 
         );
+    printf("O que desejas :\n"
+    "1 => Jogar\n"
+    "2 => Ir para o menu principal\n"
+    "3 => Sair\n"
+    
+    "Escolha: ");
+    int opcao;
+    scanf("%d",&opcao);
+    switch(opcao){
+        case 1:
+            jogo();
+            break;
+        case 2:
+            menu_inicial();
+            break;
+        case 3:
+            printf("Obrigado por jogar. Volte depois :)");
+            return;
+        default:
+            printf("Opção inválida");
+    }
 }
 void jogo(){
     LIMPA;   
@@ -178,7 +199,6 @@ void jogo(){
 
         //Verifica o numero de tentativas e menor que o maximo definido
         if (tentativasPlayer < maxTentativasPlayer){
-            fimJogo = false;
             //Se for menor ele adiciona mais uma tentativa
             tentativasPlayer++;
         }else{
@@ -234,6 +254,27 @@ void ranking(){
      JOGADOR * lista = carregaRanking();
      imprimeLista(lista);
      liberaMemoria(lista);
+     printf("O que desejas :\n"
+    "1 => Jogar\n"
+    "2 => Ir para o menu principal\n"
+    "3 => Sair\n"
+    
+    "Escolha: ");
+    int opcao;
+    scanf("%d",&opcao);
+    switch(opcao){
+        case 1:
+            jogo();
+            break;
+        case 2:
+            menu_inicial();
+            break;
+        case 3:
+            printf("Obrigado por jogar. Volte depois :)");
+            return;
+        default:
+            printf("Opção inválida");
+    }
 }
 
 void AddRanking(string nome, int pontos, int tentativasPlayer){
